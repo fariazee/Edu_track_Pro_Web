@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>EduPredict Learning</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin-top: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            text-align: center;
+        }
+        /* Sticky Footer */
+        .footer {
+            margin-top: auto;
+            background: #343a40;
+            color: white;
+            padding: 30px 0;
+        }
+        .footer a {
+            color: #ffc107;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function predictScore(event) {
+            event.preventDefault();
+            let formData = new FormData(document.getElementById("predictForm"));
+
+            fetch("", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("result").innerHTML = `<div class="alert alert-danger">❌ ${data.error}</div>`;
+                } else {
+                    document.getElementById("result").innerHTML = `<div class="alert alert-success">🎯 Predicted Exam Score: <strong>${data.predicted_score}%</strong></div>`;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</head>
+<body>
+ <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduPredict Learning</h2>
+    </a>
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+             {% if user.is_authenticated%}
+             <li class="nav-item"><span class="navbar-text text-dark">Hi, {{ user.username }}!</span></li>
+            <a href="{% url 'Home' %}" class="nav-item nav-link active">Home</a>
+
+
+            <a href="{% url 'predict_exam_score' %}" class="nav-item nav-link">Predict Exam Score</a>
+            <a href="{% url 'predictshort' %}" class="nav-item nav-link">Predict Short</a>
+            <a href="{% url 'get_attendance_data2' %}" class="nav-item nav-link">Attendance Data</a>
+            <a href="{% url 'stucharts' %}" class="nav-item nav-link">Student Charts</a>
+            <a href="{% url 'change_password' %}" class="nav-item nav-link">Change Password</a>
+
+             <a href="{% url 'signout' %}" class="nav-item nav-link">Sign Out</a>
+
+               {% else %}
+
+
+
+             <a href="{% url 'signup' %}" class="nav-item nav-link">Sign Up</a>
+            <a href="{% url 'signin' %}" class="nav-item nav-link">Sign In</a>
+{% endif %}
+
+        </div>
+
+    </div>
+</nav>
+    <!-- Main Content -->
+    <div class="container text-center">
+        <h2 class="mb-4">📚 Predict Your Exam Score</h2>
+        <form id="predictForm" onsubmit="predictScore(event)">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Study Hours:</label>
+                <input type="number" step="0.1" name="study_hours" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Attendance (%):</label>
+                <input type="number" step="0.1" name="attendance" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Sleep Hours:</label>
+                <input type="number" step="0.1" name="sleep_hours" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Previous Exam Score:</label>
+                <input type="number" step="0.1" name="prev_score" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Extracurricular Activity:</label>
+                <select name="extra_activity" class="form-select" required>
+                    <option value="none">None</option>
+                    <option value="music">Music</option>
+                    <option value="sports">Sports</option>
+                    <option value="drama">Drama</option>
+                    <option value="game">Game</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">🚀 Predict Score</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+</body>
+</html>

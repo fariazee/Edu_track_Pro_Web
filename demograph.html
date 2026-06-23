@@ -1,0 +1,276 @@
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>EduPredict</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="EduPredict, education analytics, dropout prediction, attendance tracking, exam score prediction, machine learning" name="keywords">
+    <meta content="EduPredict - AI-powered educational analytics platform for dropout prediction, attendance tracking, and exam score forecasting." name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .chart-card h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .chart-card img {
+            width: 100%;
+            max-width: 1000px;
+            max-height: 800px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+  <!-- Navbar Start -->
+   <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    <a href="{% url 'demo' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduPredict Learning</h2>
+    </a>
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ms-auto p-4 p-lg-0">
+            {% if user.is_authenticated%}
+             <li class="nav-item"><span class="navbar-text text-dark">Hi, {{ user.username }}!</span></li>
+
+
+            <li class="nav-item"><a class="nav-link" href="{% url 'mdata' %}">Attendance Chart</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'get_attendance_data' %}">Attendance Data</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'drop' %}">Predict Dropout</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'demo' %}">Demograph</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'feedback' %}">Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'signout' %}">Sign Out</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'change_password' %}">Change Password</a></li>
+     {% else %}
+
+
+            <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'signin' %}">Sign In</a></li>
+                    {% endif %}
+
+        </ul>
+
+    </div>
+</nav>
+
+    <!-- Navbar End -->
+
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0 mb-5">
+        <div class="owl-carousel header-carousel position-relative">
+            <div class="owl-carousel-item position-relative">
+                <img class="img-fluid" src="{% static 'img/carousel-1.jpg' %}" alt="">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-sm-10 col-lg-8">
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">AI-Powered Education</h5>
+                                <h1 class="display-3 text-white animated slideInDown">Smart Predictions for Better Learning Outcomes</h1>
+                                <p class="fs-5 text-white mb-4 pb-2">Predict student dropout risk, attendance trends, and exam performance using machine learning. EduPredict empowers educators with actionable insights.</p>
+                                <a href="{% url 'signup' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Get Started</a>
+                                <a href="{% url 'signin' %}" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Sign In</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="owl-carousel-item position-relative">
+                <img class="img-fluid" src="{% static 'img/carousel-2.jpg' %}" alt="">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-sm-10 col-lg-8">
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Student Analytics Dashboard</h5>
+                                <h1 class="display-3 text-white animated slideInDown">Data-Driven Insights for Student Success</h1>
+                                <p class="fs-5 text-white mb-4 pb-2">Analyze demographics, track attendance patterns, and forecast exam scores from one smart dashboard built for analysts and students.</p>
+                                <a href="{% url 'signup' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Get Started</a>
+                                <a href="{% url 'signin' %}" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Sign In</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+    <h1>Student Data Analysis Dashboard</h1>
+
+    <div class="chart-container">
+        <div class="chart-card">
+            <h2>Target Distribution</h2>
+            <img src="data:image/png;base64,{{ target_chart }}" alt="Target Pie Chart">
+        </div>
+
+        <div class="chart-card">
+            <h2>Gender Distribution</h2>
+            <img src="data:image/png;base64,{{ gender_chart }}" alt="Gender Pie Chart">
+        </div>
+
+        <div class="chart-card">
+            <h2>Course Distribution</h2>
+            <img src="data:image/png;base64,{{ course_chart }}" alt="Course Pie Chart">
+        </div>
+
+        <div class="chart-card">
+            <h2>Marital Status Distribution</h2>
+            <img src="data:image/png;base64,{{ marital_chart }}" alt="Marital Pie Chart">
+        </div>
+    </div>
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">Quick Link</h4>
+                <a class="btn btn-link" href="{% static 'about-us' %}">About EduPredict</a>
+                <a class="btn btn-link" href="{% static 'contact-us' %}">Contact Us</a>
+                <a class="btn btn-link" href="{% static 'privacy-policy' %}">Privacy Policy</a>
+                <a class="btn btn-link" href="{% static 'terms-condition' %}">Terms & Condition</a>
+                <a class="btn btn-link" href="{% static 'faqs-help' %}">FAQs & Help</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">Contact</h4>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>456 EduPredict Street, Education City, USA</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+92 21 34567890</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>support@edupredict.com</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" href="https://twitter.com/edupredict"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="https://facebook.com/edupredict"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="https://youtube.com/edupredict"><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="https://linkedin.com/company/edupredict"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">Gallery</h4>
+                <div class="row g-2 pt-2">
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="{% static 'img/course-1.jpg' %}" alt="EduPredict Course 1">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="{% static 'img/course-2.jpg' %}" alt="EduPredict Course 2">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="{% static 'img/course-3.jpg' %}" alt="EduPredict Course 3">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="{% static 'img/cat-1.jpg' %}" alt="EduPredict Course 4">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="{% static 'img/cat-2.jpg' %}" alt="EduPredict Course 5">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="{% static 'img/cat-3.jpg' %}" alt="EduPredict Course 6">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">Newsletter</h4>
+                <p>Stay updated with the latest news, courses, and updates from EduPredict.</p>
+                <div class="position-relative mx-auto" style="max-width: 400px;">
+                    <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="email" placeholder="Enter your email address">
+                    <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="{% static 'index' %}">EduPredict</a>, All Right Reserved.
+                    Designed By EduPredict
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="{% static 'home' %}">Home</a>
+                        <a href="{% static 'cookies' %}">Cookies</a>
+                        <a href="{% static 'help' %}">Help</a>
+                        <a href="{% static 'faqs' %}">FAQs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+</body>
+</html>
